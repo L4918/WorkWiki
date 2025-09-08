@@ -1,5 +1,6 @@
 package org.example.wiki.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,8 @@ import org.springframework.core.env.Environment;
 
 @ComponentScan("org.example")
 @SpringBootApplication
+//(该配置解释 整个项目怎么知道Mapper就是持久层)
+@MapperScan("org.example.wiki.mapper")
 public class WikiApplication {
     private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
     public static void main(String[] args) {
