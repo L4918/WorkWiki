@@ -8,6 +8,7 @@ import org.example.wiki.domain.EbookExample;
 import org.example.wiki.mapper.EbookMapper;
 import org.example.wiki.req.EbookReq;
 import org.example.wiki.resp.EbookResp;
+import org.example.wiki.resp.PageResp;
 import org.example.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +29,15 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req){
+    public PageResp<EbookResp> list(EbookReq req){
 
-        PageHelper.startPage(1,3);
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
 
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -55,6 +55,10 @@ public class EbookService {
 
         List<EbookResp> list = CopyUtil.copyList(ebookList,EbookResp.class);
 
-        return list;
+        PageResp<EbookResp> pageResp = new PageResp();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(list);
+
+        return pageResp;
     }
 }
