@@ -16,7 +16,7 @@
         </template>
         <template v-slot:action="{ text,record }">
           <a-space size="small">
-            <a-button type="primary">
+            <a-button type="primary" @click="edit">
               编辑
             </a-button>
             <a-button danger>
@@ -27,6 +27,15 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
+  <a-modal
+      title="电子书表单"
+      v-model:open="open"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+    <p>test</p>
+  </a-modal>
 </template>
 
 
@@ -115,6 +124,24 @@
         });
       };
 
+      // ---------- 表单 ----------
+      const open = ref<boolean>(false);
+      const modalLoading = ref<boolean>(false);
+      const handleModalOk = () => {
+        modalLoading.value = true;
+        setTimeout(() => {
+          open.value = false;
+          modalLoading.value = false;
+        }, 2000);
+      };
+
+      /**
+       * 编辑
+       */
+      const edit = () => {
+        open.value = true;
+      }
+
       onMounted(() =>{
         handleQuery({
           page: 1,
@@ -127,7 +154,13 @@
         pagination,
         columns,
         loading,
-        handleTableChange
+        handleTableChange,
+
+        edit,
+
+        open,
+        modalLoading,
+        handleModalOk
       }
 
     }
