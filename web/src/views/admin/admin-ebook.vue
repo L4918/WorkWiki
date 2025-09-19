@@ -19,7 +19,7 @@
             <a-button type="primary">
               编辑
             </a-button>
-            <a-button type="danger">
+            <a-button danger>
               删除
             </a-button>
           </a-space>
