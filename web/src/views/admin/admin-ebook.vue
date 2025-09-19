@@ -16,7 +16,7 @@
         </template>
         <template v-slot:action="{ text,record }">
           <a-space size="small">
-            <a-button type="primary" @click="edit">
+            <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
             <a-button danger>
@@ -34,7 +34,25 @@
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <p>test</p>
+    <a-form :model="ebook" :label-col="{ span: 6 }">
+      <a-form-item label="封面">
+        <a-input v-model:value="ebook.cover" />
+      </a-form-item>
+      <a-form-item label="名称">
+        <a-input v-model:value="ebook.name" />
+      </a-form-item>
+      <a-form-item label="分类一">
+        <a-input v-model:value="ebook.category1Id" />
+      </a-form-item>
+      <a-form-item label="分类二">
+        <a-input v-model:value="ebook.category2Id" />
+      </a-form-item>
+      <a-form-item label="描述">
+        <a-input v-model:value="ebook.desc" type="text" />
+      </a-form-item>
+
+    </a-form>
+
   </a-modal>
 </template>
 
@@ -66,8 +84,8 @@
         },
         {
           title: '分类一',
-          key:'category1ID',
-          dataIndex: 'category1ID'
+          key:'category1Id',
+          dataIndex: 'category1Id'
         },
         {
           title: '分类二',
@@ -125,22 +143,40 @@
       };
 
       // ---------- 表单 ----------
+      const ebook = ref({})
       const open = ref<boolean>(false);
       const modalLoading = ref<boolean>(false);
       const handleModalOk = () => {
         modalLoading.value = true;
-        setTimeout(() => {
+
+        axios.post("/ebook/save",ebook.value).then((response) =>{
           open.value = false;
           modalLoading.value = false;
-        }, 2000);
+
+          const data = response.data; //data = commonResp
+          if (data.success){
+            open.value = false;
+            modalLoading.value = false;
+
+            //重新加载列表
+            handleQuery({
+              page: pagination.value.current,
+              size: pagination.value.pageSize,
+            })
+          }
+        });
+
       };
+
+
 
       /**
        * 编辑
        */
-      const edit = () => {
+      const edit = (record: any) => {
         open.value = true;
-      }
+        ebook.value = record
+      };
 
       onMounted(() =>{
         handleQuery({
@@ -158,6 +194,7 @@
 
         edit,
 
+        ebook,
         open,
         modalLoading,
         handleModalOk

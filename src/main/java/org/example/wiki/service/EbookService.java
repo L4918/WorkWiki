@@ -1,23 +1,21 @@
 package org.example.wiki.service;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.example.wiki.domain.Ebook;
 import org.example.wiki.domain.EbookExample;
 import org.example.wiki.mapper.EbookMapper;
-import org.example.wiki.req.EbookReq;
-import org.example.wiki.resp.EbookResp;
+import org.example.wiki.req.EbookQueryReq;
+import org.example.wiki.req.EbookSaveReq;
+import org.example.wiki.resp.EbookQueryResp;
 import org.example.wiki.resp.PageResp;
 import org.example.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 //使用@Service 注解  将这个Service交给Spring来管理
@@ -29,7 +27,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req){
+    public PageResp<EbookQueryResp> list(EbookQueryReq req){
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -53,12 +51,27 @@ public class EbookService {
 //
 //        return respList;
 
-        List<EbookResp> list = CopyUtil.copyList(ebookList,EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp();
+        PageResp<EbookQueryResp> pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
         return pageResp;
+    }
+
+    /**
+     * 保存
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req,Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())){
+            //新增
+            ebookMapper.insert(ebook);
+        } else {
+            //更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+
     }
 }
