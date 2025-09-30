@@ -1,0 +1,51 @@
+package org.example.wiki.controller;
+
+import org.example.wiki.req.DocQueryReq;
+import org.example.wiki.req.DocSaveReq;
+import org.example.wiki.resp.DocQueryResp;
+import org.example.wiki.resp.CommonResp;
+import org.example.wiki.resp.PageResp;
+import org.example.wiki.service.DocService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
+
+
+@RestController
+@RequestMapping("/doc")
+public class DocController {
+    @Resource
+    private DocService docService;
+
+    @GetMapping("/all")
+    public CommonResp all(){
+        CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
+        List<DocQueryResp> list = docService.all();
+        resp.setContent(list);
+        return resp;
+    }
+
+    @GetMapping("/list")
+    public CommonResp list(@Valid DocQueryReq req){  //这里加上这个注解之后，表示这组参数要开启校验规则。对应的规则就是PageReq里的注解
+        CommonResp<PageResp<DocQueryResp>> resp = new CommonResp<>();
+        PageResp<DocQueryResp> list = docService.list(req);
+        resp.setContent(list);
+        return resp;
+    }
+
+    @PostMapping("/save")
+    public CommonResp save(@Valid @RequestBody DocSaveReq req) {
+        CommonResp resp = new CommonResp<>();
+        docService.save(req);
+        return resp;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp delete(@PathVariable Long id) {
+        CommonResp resp = new CommonResp<>();
+        docService.delete(id);
+        return resp;
+    }
+}
