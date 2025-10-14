@@ -2,8 +2,10 @@ package org.example.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.example.wiki.domain.Content;
 import org.example.wiki.domain.Doc;
 import org.example.wiki.domain.DocExample;
+import org.example.wiki.mapper.ContentMapper;
 import org.example.wiki.mapper.DocMapper;
 import org.example.wiki.req.DocQueryReq;
 import org.example.wiki.req.DocSaveReq;
@@ -27,6 +29,8 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -78,15 +82,27 @@ public class DocService {
      */
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req,Doc.class);
+        Content content = CopyUtil.copy(req,Content.class);
+
+        LOG.info("Doc对象: {}", doc);
+        LOG.info("Content对象: {}", content);
+        LOG.info("Content是否为null: {}", content == null);
+
         if (ObjectUtils.isEmpty(req.getId())){
             //新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             //更新
             docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0){
+                contentMapper.insert(content);
+            }
         }
-
     }
 
     public void delete(Long id) {
