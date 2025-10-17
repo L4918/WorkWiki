@@ -25,6 +25,7 @@
                         connectionURL="jdbc:mysql://localhost:3306/wiki?serverTimezone=Asia/Shanghai"
                         userId="wiki"
                         password="Wiki7788321">
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <!-- domain类的位置 -->
@@ -44,6 +45,7 @@
 <!--        <table tableName="ebook"/>-->
 <!--        <table tableName="category"/>-->
 <!--        <table tableName="doc"/>-->
-        <table tableName="content"/>
+<!--        <table tableName="content"/>-->
+        <table tableName="user"/>
     </context>
 </generatorConfiguration>
