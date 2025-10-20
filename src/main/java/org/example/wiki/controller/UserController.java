@@ -2,6 +2,7 @@ package org.example.wiki.controller;
 
 
 import org.example.wiki.req.UserQueryReq;
+import org.example.wiki.req.UserResetPasswordReq;
 import org.example.wiki.resp.CommonResp;
 import org.example.wiki.resp.PageResp;
 import org.example.wiki.resp.UserQueryResp;
@@ -45,4 +46,11 @@ public class UserController {
         return resp;
     }
 
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
+        return resp;
+    }
 }
