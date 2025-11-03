@@ -1,10 +1,12 @@
 package org.example.wiki.controller;
 
 
+import org.example.wiki.req.UserLoginReq;
 import org.example.wiki.req.UserQueryReq;
 import org.example.wiki.req.UserResetPasswordReq;
 import org.example.wiki.resp.CommonResp;
 import org.example.wiki.resp.PageResp;
+import org.example.wiki.resp.UserLoginResp;
 import org.example.wiki.resp.UserQueryResp;
 import org.example.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -51,6 +53,15 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }
