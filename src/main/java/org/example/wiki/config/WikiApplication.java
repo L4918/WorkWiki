@@ -7,11 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan("org.example")
 @SpringBootApplication
 //(该配置解释 整个项目怎么知道Mapper就是持久层)
 @MapperScan("org.example.wiki.mapper")
+@EnableScheduling
 public class WikiApplication {
     private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
     public static void main(String[] args) {
