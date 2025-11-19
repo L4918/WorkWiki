@@ -3,7 +3,6 @@ package org.example.wiki.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -69,6 +68,7 @@ public class WebSocketServer {
             } catch (IOException e){
                 LOG.error("推送消息失败: {}, 内容: {}",token,message);
             }
+            LOG.info("推送消息: {}, 内容: {}", token, message);
         }
     }
 
