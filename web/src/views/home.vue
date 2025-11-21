@@ -27,7 +27,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <h1>欢迎使用L知识库</h1>
+        <the-welcome></the-welcome>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{gutter: 20,column:3}" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -67,9 +67,13 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 import {Tool} from "@/util/tool"
 import {FileOutlined, UserOutlined} from "@ant-design/icons-vue";
+import TheWelcome from "@/components/the-welcome.vue";
 
 export default defineComponent({
   name: 'HomeView',
+  components: {
+    TheWelcome
+  },
   methods: {UserOutlined, FileOutlined},
   setup() {
     console.log("setup");
